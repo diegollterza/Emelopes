@@ -1,6 +1,6 @@
-dvc
-Pillow
-tensorflow
-scipy
-dvclive
-dvc-gdrive
+dvc==3.33.3
+Pillow==10.1.0
+tensorflow==2.15.0
+scipy==1.11.4
+dvclive==3.4.1
+dvc-gdrive==2.20.0
