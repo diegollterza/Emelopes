@@ -1,6 +1,9 @@
 # from dvclive.keras import DvcLiveCallback
 from tensorflow.keras import layers, Sequential, optimizers
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from dvclive import Live
+from dvclive.keras import DVCLiveCallback
+from dvc.api import params_show
 import pathlib
 
 
@@ -75,16 +78,19 @@ class Training:
 
     def train(self):
         train_ds, val_ds = self.load_ds()
-
-        self.model.fit(
-            train_ds,
-            steps_per_epoch=train_ds.samples // self.batch_size,
-            validation_data=val_ds,
-            validation_steps=val_ds.samples // self.batch_size,
-            epochs=self.params['epochs'],
-            verbose=self.params['verbose'],
-        )
-
+        with Live() as live:
+            self.model.fit(
+                train_ds,
+                steps_per_epoch=train_ds.samples // self.batch_size,
+                validation_data=val_ds,
+                validation_steps=val_ds.samples // self.batch_size,
+                epochs=self.params['epochs'],
+                verbose=self.params['verbose'],
+                callbacks=[
+                    DVCLiveCallback(live=live)
+                ]
+            )
+        
         return self
 
     def save_model(self):
@@ -93,15 +99,7 @@ class Training:
 
 
 def main():
-    params = {
-        "input_height": 224,
-        "input_width": 224,
-        "input_channels": 3,
-        "batch_size": 64,
-        "epochs": 10,
-        "verbose": 1,
-        "model_filepath": "./model.keras",
-    }
+    params = params_show()
 
     Training(params).build_model().train().save_model()
 
