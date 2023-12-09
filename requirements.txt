@@ -2,3 +2,5 @@ dvc
 Pillow
 tensorflow
 scipy
+dvclive
+dvc-gdrive
