@@ -17,8 +17,11 @@ jobs: # what it will run
         env:
           GDRIVE_CREDENTIALS_DATA: ${{ secrets.GOOGLE_DRIVE_SECRET }}
         run: | # custom commands
+          echo "Starting"
           pip install -r requirements.txt
+          echo "Running dvc pull"
           dvc pull ds --run-cache
+          echo "Running dvc repro"
           dvc repro
       - uses: iterative/setup-cml@v2
       - name: Report
